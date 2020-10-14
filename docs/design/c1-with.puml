@@ -1,0 +1,19 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+title Typical JWT-based architecture with JWT blacklisting service.
+
+Enterprise_Boundary(c0, "Web application") {
+    System(front_app, "Front JS application", "Application uses JWT to access protected resources.")
+
+    System(mobile_app, "Native mobile application", "Application uses JWT to access protected resources.")
+
+    System(jwt_blacklister, "JWT blacklisting service", "Layer storing blacklisted tokens.")
+
+    System(backend_app, "Backend application", "Application provides and verifies JWT in auth flow.")
+}
+
+Rel(front_app, jwt_blacklister, "accesses")
+Rel(mobile_app, jwt_blacklister, "accesses")
+Rel(jwt_blacklister, backend_app, "proxies to")
+@enduml
