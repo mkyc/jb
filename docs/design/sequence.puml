@@ -1,0 +1,30 @@
+@startuml
+
+title Sequence diagram of basic UC.
+
+participant "Front application" as front
+participant "JWT blacklister" as jb
+participant "Backend application" as back
+
+... user was logged in so far ...
+front -> jb : reqests to /logout endpoint
+jb -> jb : verifies that /logout endpoint\nis "blacklisting" type endpoint
+jb -> jb : reads token expiration timestamp
+jb -> jb : stores "sub" (subject) and current\ntimestamp in KV store to blacklist\ntoken
+jb --> front : responds OK
+... user logs in again ...
+front -> jb : requests to /login endpoint
+jb -> jb : verifies that /login endpoint\nis "pass" type endpoint
+jb -> back : passes request
+back --> jb : responds new token
+jb --> front : passes response
+... user wants to see dashboard ...
+front -> jb : requests to /dashboad endpoint
+jb -> jb : verifies that /dashboard endpoint\nis "protect" type endpoint
+jb -> jb : verifies if "sub" (subject)\nkey exists in KV store
+jb -> jb : verifies if "iat" (issued at) of JWT\ntoken in request is after timestamp\nstored in KV entry
+jb -> back : passes request
+back --> jb : responds some data
+jb --> front : passes response
+
+@enduml
