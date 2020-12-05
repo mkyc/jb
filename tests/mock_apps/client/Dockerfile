@@ -6,6 +6,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build -o client .
+RUN go get github.com/dgrijalva/jwt-go && go build -o client .
 
 CMD ["/app/client"]

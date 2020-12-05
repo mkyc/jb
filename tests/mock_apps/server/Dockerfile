@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build -o server .
+RUN go get github.com/dgrijalva/jwt-go && go build -o server .
 
 EXPOSE 8081
 
